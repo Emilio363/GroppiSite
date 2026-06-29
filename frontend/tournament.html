@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GroppiSite — Torneo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main>
+    <p><a href="tournaments.html">&larr; Tutti i tornei</a></p>
+
+    <div id="message"></div>
+
+    <!-- intestazione + azioni del creatore, popolata da js/tournament.js -->
+    <section id="info"></section>
+    <!-- form di modifica torneo (owner), nascosto di default -->
+    <div id="edit-panel" hidden></div>
+
+    <section id="content" hidden>
+      <h2 style="font-size:1.15rem;">Classifica</h2>
+      <div id="standings"></div>
+
+      <h2 style="font-size:1.15rem;">Partite</h2>
+      <div id="matches"></div>
+
+      <h2 style="font-size:1.15rem;">Squadre</h2>
+      <div id="add-team"></div>
+      <div id="teams" class="grid"></div>
+    </section>
+  </main>
+
+  <script type="module" src="js/tournament.js"></script>
+</body>
+</html>

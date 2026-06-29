@@ -1,0 +1,4 @@
+-- creazione user di default
+CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '1234';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;

@@ -1,0 +1,40 @@
+# path: GroppiSite/docker-compose.yml
+
+services:
+  groppi_app:
+    container_name: groppi_app
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      - JWT_SECRET=06516024d20f36f491be7f46def1b6a9fb86ea60036b41be9d94d1dd2e677607
+      - DEMO=true
+      # parametri di connessione al DB (coerenti con i default di db.js)
+      - DB_HOST=groppi_DB
+      - DB_USER=root
+      - DB_PASSWORD=1234
+      - DB_NAME=CAMPI
+    volumes:
+      # mount del frontend per editarlo a caldo (basta ricaricare il browser, niente rebuild)
+      - ./frontend:/srv/frontend
+    depends_on:
+      groppi_DB:
+        condition: service_healthy   # l'app parte solo quando il DB è pronto
+
+  groppi_DB:
+    container_name: groppi_DB
+    image: mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234
+      - MARIADB_DATABASE=CAMPI
+    volumes:
+      - groppi_db_data:/var/lib/mysql              # dati DB (volume gestito da Docker)
+      - ./database:/docker-entrypoint-initdb.d:ro  # database.sql eseguito al primo avvio
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  groppi_db_data:

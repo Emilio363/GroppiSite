@@ -1,0 +1,161 @@
+/* ---- variabili e reset leggero ---- */
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --text: #1f2933;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --border: #e5e7eb;
+  --danger: #dc2626;
+  --ok: #16a34a;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---- header / nav ---- */
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.site-header .bar {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.site-header .brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+.site-header nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+.site-header nav a { color: var(--muted); font-weight: 500; }
+.site-header nav a.active, .site-header nav a:hover { color: var(--primary); }
+.site-header .auth { margin-left: auto; display: flex; align-items: center; gap: 0.75rem; }
+.site-header .auth .user { color: var(--muted); font-size: 0.9rem; }
+
+/* ---- layout ---- */
+main {
+  max-width: 1000px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
+h1 { font-size: 1.5rem; margin: 0 0 1rem; }
+.muted { color: var(--muted); }
+
+/* ---- toolbar di ricerca / filtri ---- */
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+/* ---- form e input ---- */
+input, select, textarea {
+  font: inherit;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+}
+input:focus, select:focus { outline: 2px solid var(--primary); outline-offset: 0; }
+label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.25rem; }
+.field { margin-bottom: 0.9rem; }
+
+/* ---- bottoni ---- */
+.btn {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 500;
+}
+.btn:hover { background: var(--primary-dark); }
+.btn.secondary { background: var(--surface); color: var(--text); border-color: var(--border); }
+.btn.secondary:hover { background: var(--bg); }
+.btn.danger { background: var(--danger); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---- card / griglia ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+}
+.card h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: var(--primary-dark);
+}
+
+/* ---- tabelle ---- */
+table { width: 100%; border-collapse: collapse; background: var(--surface); }
+th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+
+/* ---- messaggi ---- */
+.alert {
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+}
+.alert.error { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+.alert.ok { background: #f0fdf4; color: var(--ok); border: 1px solid #bbf7d0; }
+.empty { color: var(--muted); padding: 2rem; text-align: center; }
+
+/* ---- modale (login/signup) ---- */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem; z-index: 50;
+}
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  width: 100%; max-width: 380px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+.modal h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+.modal .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.modal .tabs button {
+  flex: 1; cursor: pointer; padding: 0.4rem;
+  border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius);
+}
+.modal .tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.modal .close { float: right; cursor: pointer; border: none; background: none; font-size: 1.3rem; color: var(--muted); }
+[hidden] { display: none !important; }

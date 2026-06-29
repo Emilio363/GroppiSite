@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GroppiSite — Tornei</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main>
+    <h1>Tornei</h1>
+
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Cerca per nome o sport…" style="flex:1; min-width:220px;">
+      <!-- bottone "Crea torneo" iniettato da js/tournaments.js solo se loggato -->
+      <div id="create-action"></div>
+    </div>
+
+    <!-- pannello del form di creazione, nascosto finché non si clicca "Crea torneo" -->
+    <div id="create-panel" hidden></div>
+
+    <div id="message"></div>
+    <div id="list" class="grid"></div>
+  </main>
+
+  <script type="module" src="js/tournaments.js"></script>
+</body>
+</html>

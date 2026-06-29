@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GroppiSite — Campi</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main>
+    <h1>Campi sportivi</h1>
+
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Cerca per nome, sport o indirizzo…" style="flex:1; min-width:220px;">
+      <select id="sport-filter">
+        <option value="">Tutti gli sport</option>
+      </select>
+    </div>
+
+    <div id="message"></div>
+    <div id="list" class="grid"></div>
+  </main>
+
+  <script type="module" src="js/fields.js"></script>
+</body>
+</html>
