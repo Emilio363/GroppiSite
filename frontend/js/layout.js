@@ -8,10 +8,11 @@ const NAV = [
   { key: 'campi', label: 'Campi', href: 'index.html' },
   { key: 'tornei', label: 'Tornei', href: 'tournaments.html' },
   { key: 'utenti', label: 'Utenti', href: 'users.html' },
+  // { key: 'squadre', label: 'Squadre', href: 'teams.html' },
 ];
 
 let currentUser = null;            // null = non loggato
-const listeners = [];              // callback notificati ai cambi di sessione
+const listeners = []; 
 
 function getUser() { return currentUser; }
 function onAuthChange(cb) { listeners.push(cb); }
@@ -27,7 +28,7 @@ async function refreshUser() {
   return currentUser;
 }
 
-// ---- rendering header ----
+// creatore dello header
 function renderHeader(activeKey) {
   const header = document.getElementById('site-header');
   if (!header) return;
@@ -94,6 +95,7 @@ function openAuthModal() {
   const close = () => backdrop.remove();
   backdrop.querySelector('.close').addEventListener('click', close);
   backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+  document.body.addEventListener('keydown', (e) => {if (e.key == "Escape") close(); });
 
   const errBox = backdrop.querySelector('.auth-error');
   const showErr = (msg) => { errBox.textContent = msg; errBox.hidden = false; };
@@ -128,7 +130,7 @@ function openAuthModal() {
   formSignup.addEventListener('submit', handle('/auth/signup'));
 }
 
-// utility: evita injection mostrando testo proveniente dal DB
+// rende s adatta alle chiamate HTML
 function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])

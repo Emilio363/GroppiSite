@@ -55,12 +55,12 @@ async function load(q) {
   }
 }
 
-// debounce sulla ricerca per non chiamare il server a ogni tasto
 let timer;
 searchEl.addEventListener('input', () => {
   clearTimeout(timer);
-  timer = setTimeout(() => load(searchEl.value.trim()), 250);
+  timer = setTimeout(() => load(searchEl.value.trim()), 250); // aspetto prima di cominciare a cercare
 });
+
 sportEl.addEventListener('change', applySportFilter);
 
 initLayout('campi');

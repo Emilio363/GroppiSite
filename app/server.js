@@ -42,15 +42,6 @@ app.get('/api/whoami', verifyToken, async (req, res) => {
   res.json(user);
 });
 
-// GET /api/debug/where?q=...
-// app.get('/api/debug/where', (req, res) => {
-//   const columns = ['c.nome', 'sp.nome', 'c.indirizzo'];
-//   // se q manca uso un valore di esempio, così sql non è mai vuoto
-//   const q = req.query.q || 'ciao';
-//   const { sql, params } = whereCreate(columns, q);
-//   res.json({ q, columns, sql, params });
-// });
-
 app.get('/api/debug/where', (req, res) => {
   const columns = ['c.nome', 'sp.nome', 'c.indirizzo'];
   // se q manca uso un valore di esempio, così sql non è mai vuoto
@@ -180,7 +171,13 @@ app.get('/api/users/:id', async (req, res) => {
     'SELECT id, nome, owner_id, sport_id, start_date FROM torneo WHERE owner_id = ? ORDER BY start_date DESC',
     [id]
   );
-  res.json({ ...rows[0], tornei });
+  const prenotazioni = await query(
+    `SELECT pr.id, c.sport_id, pr.data, pr.ora_inizio, pr.ora_fine, c.nome FROM prenotazione pr
+      JOIN campo c ON c.id = pr.campo_id 
+      WHERE pr.utente_id = ?`,
+      [id] 
+  );
+  res.json({ ...rows[0], tornei, prenotazioni });
 });
 
 // File statici del frontend (cartella ../frontend servita da Express, stessa origine dell'API)

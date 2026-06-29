@@ -181,7 +181,7 @@ function renderStandings() {
 }
 
 // ---- partite ----
-function renderMatches() {
+async function renderMatches() {
   const partite = data.partite || [];
   if (partite.length === 0) {
     matchesEl.innerHTML = '<p class="empty">Calendario non ancora generato.</p>';
@@ -190,13 +190,36 @@ function renderMatches() {
   const owner = isOwner();
   matchesEl.innerHTML = `<table><thead><tr>
       <th>Partita</th><th>Quando</th><th>Risultato</th>${owner ? '<th></th>' : ''}
-    </tr></thead><tbody>${partite
-      .map((m) => {
-        const quando = matchSchedule(m) || '<span class="muted">da definire</span>';
+    </tr></thead><tbody>${(await Promise.all(partite
+      .map( async (m) => {
         const ris = m.stato === 'giocata'
-          ? `<strong>${m.risultato_squadra1} – ${m.risultato_squadra2}</strong>`
+          ? `<strong>${m.risultato_squadra1} - ${m.risultato_squadra2}</strong>`
           : '<span class="muted">—</span>';
         let action = '';
+        let reserv = '';
+        if (owner && m.stato !== 'giocata'){
+          const dati = await apiGet(`/users/${getUser().id}`);
+          const precReserv = m.prenotazione_id; 
+          console.log(dati);
+          reserv = `
+          <form class="reserv-form" data-match="${m.id}" style="display:flex; gap:0.3rem; align-items:center;">
+            <select name="prenotazione" ${dati.prenotazioni.length ? '' : 'disabled'}>
+            <option value = "default" ${precReserv ? '' : 'selected'} disabled>da definire</option>
+            ${
+              dati.prenotazioni.map(
+                (pre) => {
+                  // `<option value = "${pre.id}">ciao</option>`
+                  return `<option value = "${pre.id}" ${precReserv == pre.id ? 'selected' : ''}>${pre.nome} - 
+                  ${formatDateTime(pre.data).slice(0,-7)} (${pre.ora_inizio.slice(0,-3)} - ${pre.ora_fine.slice(0,-3)})</option>`
+                }
+              ).join('')}
+              </select>
+              <button class="btn" type="submit">Salva</button>
+            </form>`;
+        }
+        else{
+          reserv = matchSchedule(m) || '<span class="muted">da definire</span>';
+        }
         if (owner) {
           action = m.stato === 'giocata'
             ? '<span class="muted">giocata</span>'
@@ -209,16 +232,33 @@ function renderMatches() {
         }
         return `<tr>
           <td>${escapeHtml(m.squadra1)} <span class="muted">vs</span> ${escapeHtml(m.squadra2)}</td>
-          <td>${quando}</td><td>${ris}</td>${owner ? `<td>${action}</td>` : ''}
+          <td>${reserv}</td><td>${ris}</td>${owner ? `<td>${action}</td>` : ''}
         </tr>`;
-      })
-      .join('')}</tbody></table>`;
+      }))).join('')}</tbody></table>`;
 
   if (owner) {
     matchesEl.querySelectorAll('.result-form').forEach((form) =>
       form.addEventListener('submit', onResult)
     );
+    matchesEl.querySelectorAll('.reserv-form').forEach((form) =>
+      form.addEventListener('submit', onReserv)
+    );
   }
+}
+
+async function onReserv(e) {
+  e.preventDefault();
+  const f = e.target;
+  const matchId = f.dataset.match;
+  if (f.prenotazione.value == 'default') return;
+
+  try {
+    await apiPut(`/matches/${matchId}/reserv`, {
+      reserv_id: f.prenotazione.value,
+    });
+    showOk('Risultato salvato.');
+    await reload();
+  } catch (err) { showError(err.message); }
 }
 
 async function onResult(e) {

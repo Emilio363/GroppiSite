@@ -189,8 +189,6 @@ router.get('/tournaments/:id/standings', async (req, res) => {
   res.json(standings);
 });
 
-
-
 // POST /api/tournaments - crea un torneo
 router.post('/tournaments', verifyToken, async (req, res) => {
   const nome = (req.body?.nome || '').trim();
@@ -381,6 +379,54 @@ router.put('/matches/:id/result', verifyToken, async (req, res) => {
     [r1, r2, id]
   );
   res.json({ id, risultato_squadra1: r1, risultato_squadra2: r2, stato: 'giocata' });
+});
+
+router.put('/matches/:id/reserv', verifyToken, async (req, res) => {
+  const matchId = Number(req.params.id);
+  const reservId = Number(req.body.reserv_id);
+  if (Number.isNaN(matchId)) return res.status(400).json({ error: 'id non valido' });
+
+  // la persona a cui appartiene il torneo che ha questa partita sei tu?
+  const rows = await query(
+    `SELECT p.id, t.owner_id,
+            DATE_FORMAT(pr.data, '%Y-%m-%d') AS data, pr.ora_inizio
+       FROM partita p
+       LEFT JOIN torneo t ON p.torneo_id = t.id
+       LEFT JOIN prenotazione pr ON p.prenotazione_id = pr.id
+      WHERE p.id = ?`,
+    [matchId]
+  );
+  const m = rows[0];
+  if (!m) return res.status(404).json({ error: 'Partita non trovata' });
+  if (m.owner_id == null || m.owner_id !== req.user.id) {
+    return res.status(403).json({ error: 'Solo il creatore del torneo può cambiare la prenotazione' });
+  }
+  // il proprietario della prenotazione sei tu?
+  const good = await query(
+    `SELECT p.utente_id, u.name FROM prenotazione p
+      JOIN utente u ON u.id = p.utente_id
+      WHERE p.id = ?`,
+    [reservId]
+  );
+  const r = good[0];
+  if (!r) return res.status(404).json({ error: 'Prenotazione non trovata' });
+  if (r.utente_id == null || r.utente_id !== req.user.id) {
+    return res.status(403).json({ error: 'Solo il creatore della prenotazione può assegnarla a una partita' });
+  }
+
+  await query(
+    'UPDATE partita SET prenotazione_id = ? WHERE id = ?',
+    [reservId, matchId]
+  );
+  res.json({ partita : matchId, prenotazione : reservId });
+});
+
+router.get('/matches/:id/reserv', verifyToken, async (req,res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) return res.status(400).json({ error: 'id non valido' });
+  const res_id = await query('SELECT prenotazione_id FROM partita WHERE id = ?', [id]);
+  if (res_id.length === 0) return res.status(404).json({ error: 'Partita non trovata' });
+  res.json({reserv_id : res_id});
 });
 
 export default router;

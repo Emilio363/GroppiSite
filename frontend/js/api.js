@@ -36,7 +36,10 @@ async function api(path, options = {}) {
 // scorciatoie
 const apiGet = (path) => api(path);
 const apiPost = (path, body) => api(path, { method: 'POST', body });
-const apiPut = (path, body) => api(path, { method: 'PUT', body });
+const apiPut = (path, body) => {
+  api(path, { method: 'PUT', body })
+  console.log(body);
+  };
 const apiDelete = (path) => api(path, { method: 'DELETE' });
 
 export { api, apiGet, apiPost, apiPut, apiDelete };
