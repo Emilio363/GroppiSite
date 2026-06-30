@@ -1,9 +1,3 @@
-// Wrapper minimale su fetch condiviso da tutte le pagine.
-// - prefissa /api
-// - include sempre i cookie (per l'auth con cookie httpOnly)
-// - serializza/deserializza JSON
-// - su risposta non-ok lancia un Error con .status e .data (il messaggio è data.error)
-
 async function api(path, options = {}) {
   const opts = {
     credentials: 'same-origin', // frontend e API sono sulla stessa origine

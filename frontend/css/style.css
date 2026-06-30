@@ -1,4 +1,4 @@
-/* ---- variabili e reset leggero ---- */
+
 :root {
   --bg: #f4f6f8;
   --surface: #ffffff;
@@ -26,7 +26,6 @@ body {
 a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ---- header / nav ---- */
 .site-header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -51,7 +50,6 @@ a:hover { text-decoration: underline; }
 .site-header .auth { margin-left: auto; display: flex; align-items: center; gap: 0.75rem; }
 .site-header .auth .user { color: var(--muted); font-size: 0.9rem; }
 
-/* ---- layout ---- */
 main {
   max-width: 1000px;
   margin: 1.5rem auto;
@@ -60,7 +58,6 @@ main {
 h1 { font-size: 1.5rem; margin: 0 0 1rem; }
 .muted { color: var(--muted); }
 
-/* ---- toolbar di ricerca / filtri ---- */
 .toolbar {
   display: flex;
   gap: 0.75rem;
@@ -68,7 +65,6 @@ h1 { font-size: 1.5rem; margin: 0 0 1rem; }
   margin-bottom: 1.25rem;
 }
 
-/* ---- form e input ---- */
 input, select, textarea {
   font: inherit;
   padding: 0.5rem 0.7rem;
@@ -81,7 +77,6 @@ input:focus, select:focus { outline: 2px solid var(--primary); outline-offset: 0
 label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.25rem; }
 .field { margin-bottom: 0.9rem; }
 
-/* ---- bottoni ---- */
 .btn {
   font: inherit;
   cursor: pointer;
@@ -92,13 +87,13 @@ label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 
   color: #fff;
   font-weight: 500;
 }
+
 .btn:hover { background: var(--primary-dark); }
 .btn.secondary { background: var(--surface); color: var(--text); border-color: var(--border); }
 .btn.secondary:hover { background: var(--bg); }
 .btn.danger { background: var(--danger); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ---- card / griglia ---- */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -121,12 +116,10 @@ label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 
   color: var(--primary-dark);
 }
 
-/* ---- tabelle ---- */
 table { width: 100%; border-collapse: collapse; background: var(--surface); }
 th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border); }
 th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
 
-/* ---- messaggi ---- */
 .alert {
   padding: 0.6rem 0.9rem;
   border-radius: var(--radius);
@@ -136,7 +129,6 @@ th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
 .alert.ok { background: #f0fdf4; color: var(--ok); border: 1px solid #bbf7d0; }
 .empty { color: var(--muted); padding: 2rem; text-align: center; }
 
-/* ---- modale (login/signup) ---- */
 .modal-backdrop {
   position: fixed; inset: 0;
   background: rgba(0, 0, 0, 0.45);

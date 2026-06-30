@@ -9,7 +9,6 @@ import tournamentsRouter from './tournaments.js';
 import bookingsRouter from './bookings.js';
 import teamsRouter from './teams.js';
 
-// cartella del frontend: sta accanto ad app/ (../frontend rispetto a questo file)
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
 
@@ -17,9 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// reindirizzo le richieste '/api/auth'
 app.use('/api/auth', authRouter);
-// router montati sotto '/api' (i path interni sono relativi: '/tournaments', '/fields/:id/bookings', '/teams', ...)
 app.use('/api', tournamentsRouter);
 app.use('/api', bookingsRouter);
 app.use('/api', teamsRouter);
@@ -49,7 +46,6 @@ app.get('/api/debug/where', (req, res) => {
   const params= whereCreate(columns, q);
   res.json( params );
 });
-// ----- Campi -----
 
 // GET /api/fields?q=
 app.get('/api/fields', async (req, res) => {
@@ -62,7 +58,6 @@ app.get('/api/fields', async (req, res) => {
   );
   res.json(rows);
 });
-
 
 // GET /api/fields/:id
 app.get('/api/fields/:id', async (req, res) => {
@@ -85,7 +80,6 @@ app.get('/api/fields/:id/slots', async (req, res) => {
   const id = Number(req.params.id);
   if (Number.isNaN(id)) return res.status(400).json({ error: 'id non valido' });
   const date = req.query.date;
-  // YYYY-MM-DD con mese 01-12 e giorno 01-31 (non controlla la coerenza giorno/mese)
   if (!date || !/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(date)) {
     return res.status(400).json({ error: 'Parametro date non corretto' });
   }
@@ -143,7 +137,6 @@ app.get('/api/matches/:id', async (req, res) => {
   });
 });
 
-// GET /api/users?q=
 app.get('/api/users', async (req, res) => {
   const { sql, params } = whereCreate(['username', 'name', 'surname'], req.query.q);
   const users = await query(
@@ -180,10 +173,8 @@ app.get('/api/users/:id', async (req, res) => {
   res.json({ ...rows[0], tornei, prenotazioni });
 });
 
-// File statici del frontend (cartella ../frontend servita da Express, stessa origine dell'API)
 app.use(express.static(FRONTEND_DIR));
 
-// Gestore errori centralizzato: con Express 5 le route async che lanciano arrivano qui.
 app.use((err, req, res, next) => {
   console.error('Errore non gestito:', err);
   res.status(500).json({ error: 'Errore interno' });

@@ -17,8 +17,7 @@ function normalizeTime(value) {
   return `${m[1]}:${m[2]}:${m[3] || '00'}`;
 }
 
-// Valida l'intervallo orario from/to (presi da req.body o req.query).
-// Ritorna { from, to } normalizzati se presenti e validi, altrimenti { error } col messaggio.
+// Ritorna { from, to } normalizzati
 function parseInterval(rawFrom, rawTo) {
   const from = normalizeTime(rawFrom);
   const to = normalizeTime(rawTo);

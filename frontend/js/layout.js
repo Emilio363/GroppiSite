@@ -1,14 +1,9 @@
-// Header/nav condiviso + gestione sessione (login/signup/logout) tramite una modale.
-// Ogni pagina mette <header id="site-header"></header> e chiama initLayout('chiave-nav').
-// Espone getUser() per sapere chi è loggato e onAuthChange() per reagire ai cambi di stato.
-
 import { apiGet, apiPost } from './api.js';
 
 const NAV = [
   { key: 'campi', label: 'Campi', href: 'index.html' },
   { key: 'tornei', label: 'Tornei', href: 'tournaments.html' },
   { key: 'utenti', label: 'Utenti', href: 'users.html' },
-  // { key: 'squadre', label: 'Squadre', href: 'teams.html' },
 ];
 
 let currentUser = null;            // null = non loggato

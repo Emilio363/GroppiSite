@@ -1,11 +1,8 @@
-
-
 import { Router } from 'express';
 import { query } from './db.js';
 import { whereCreate } from './helpers.js';
 import { verifyToken } from './auth.js';
 
-// Router montato sotto '/api' in server.js: i path qui partono da '/tournaments'.
 const router = Router();
 
 // squadre di un torneo, ciascuna con i propri giocatori.
@@ -430,5 +427,3 @@ router.get('/matches/:id/reserv', verifyToken, async (req,res) => {
 });
 
 export default router;
-
-

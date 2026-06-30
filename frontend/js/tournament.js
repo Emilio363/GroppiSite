@@ -1,7 +1,3 @@
-// Pagina dettaglio + gestione di un torneo.
-// Legge ?id=, mostra info + classifica + partite + squadre (da GET /tournaments/:id).
-// Le azioni di gestione (modifica/elimina, genera calendario, aggiungi squadra/giocatore,
-// inserisci risultato) sono mostrate solo al creatore (getUser().id === data.owner_id).
 import { apiGet, apiPost, apiPut, apiDelete } from './api.js';
 import { initLayout, getUser, onAuthChange, escapeHtml } from './layout.js';
 
@@ -16,11 +12,11 @@ const teamsEl = document.getElementById('teams');
 
 const id = Number(new URLSearchParams(location.search).get('id'));
 
-let data = null;        // dettaglio torneo corrente
-let allTeams = [];      // tutte le squadre (per associare squadre esistenti) — solo owner
-let allPlayers = [];    // tutti i giocatori (per associare giocatori esistenti) — solo owner
+let data = null;        
+let allTeams = [];      
+let allPlayers = [];    
 
-// ---- utility ----
+
 const hhmm = (t) => String(t).slice(0, 5);
 function showMessage(html) { messageEl.innerHTML = html; }
 function showError(msg) { showMessage(`<div class="alert error">${escapeHtml(msg)}</div>`); }
@@ -43,7 +39,7 @@ function toLocalInput(value) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-// orario di una partita (se ha una prenotazione collegata) oppure null
+// orario di una partita
 function matchSchedule(m) {
   if (!m.giorno) return null;
   const day = formatDateTime(m.giorno).split(',')[0]; // solo la data
@@ -76,7 +72,6 @@ function renderAll() {
   renderTeams();
 }
 
-// ---- intestazione + azioni torneo ----
 function renderInfo() {
   const owner = isOwner();
   const start = formatDateTime(data.start_date) || '—';
@@ -157,7 +152,6 @@ async function onGenerate() {
   } catch (err) { showError(err.message); }
 }
 
-// ---- classifica ----
 function renderStandings() {
   const rows = data.classifica || [];
   if (rows.length === 0) {
@@ -180,7 +174,6 @@ function renderStandings() {
     </table>`;
 }
 
-// ---- partite ----
 async function renderMatches() {
   const partite = data.partite || [];
   if (partite.length === 0) {
@@ -208,7 +201,6 @@ async function renderMatches() {
             ${
               dati.prenotazioni.map(
                 (pre) => {
-                  // `<option value = "${pre.id}">ciao</option>`
                   return `<option value = "${pre.id}" ${precReserv == pre.id ? 'selected' : ''}>${pre.nome} - 
                   ${formatDateTime(pre.data).slice(0,-7)} (${pre.ora_inizio.slice(0,-3)} - ${pre.ora_fine.slice(0,-3)})</option>`
                 }
@@ -275,11 +267,9 @@ async function onResult(e) {
   } catch (err) { showError(err.message); }
 }
 
-// ---- aggiungi squadra (owner) ----
 function renderAddTeam() {
   if (!isOwner()) { addTeamEl.innerHTML = ''; return; }
   const enrolled = new Set(data.squadre.map((s) => s.nome));
-  // squadre dello stesso sport del torneo non ancora iscritte
   const available = allTeams.filter((t) => t.sport === data.sport && !enrolled.has(t.nome));
   const options = available
     .map((t) => `<option value="${escapeHtml(t.nome)}">${escapeHtml(t.nome)}</option>`)
@@ -329,20 +319,17 @@ async function onCreateTeam(e) {
   const nome = e.target.nome.value.trim();
   if (!nome) return;
   try {
-    // 1) crea la squadra (stesso sport del torneo); se esiste già va bene lo stesso
     try {
       await apiPost('/teams', { nome, sport: data.sport });
     } catch (err) {
       if (err.status !== 409) throw err; // 409 = esiste già: proseguo ad associarla
     }
-    // 2) associala al torneo
     await apiPost(`/tournaments/${id}/teams`, { nome });
     showOk('Squadra creata e aggiunta al torneo.');
     await reload();
   } catch (err) { showError(err.message); }
 }
 
-// ---- squadre + giocatori ----
 function renderTeams() {
   const squadre = data.squadre || [];
   const owner = isOwner();
@@ -425,8 +412,6 @@ async function onCreatePlayer(e) {
   e.preventDefault();
   const f = e.target;
   const teamId = f.dataset.team;
-  // attenzione: f.name su un form è l'attributo name DEL FORM, non l'input "name":
-  // accedo ai controlli via f.elements.
   const els = f.elements;
   const body = { name: els.name.value.trim(), surname: els.surname.value.trim() };
   if (els.numero.value !== '') body.numero = Number(els.numero.value);
@@ -438,7 +423,6 @@ async function onCreatePlayer(e) {
   } catch (err) { showError(err.message); }
 }
 
-// ---- avvio ----
 onAuthChange(() => { if (data) reload(); }); // login/logout: rivaluta i permessi e ricarica
 initLayout('tornei');
 

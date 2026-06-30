@@ -1,5 +1,3 @@
-// Pagina elenco utenti: ricerca lato server (?q=). Ogni utente mostra i tornei che ha creato.
-// GET /api/users restituisce già, per ciascun utente, l'array `tornei` → niente pagina di dettaglio.
 import { apiGet } from './api.js';
 import { initLayout, escapeHtml } from './layout.js';
 

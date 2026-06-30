@@ -10,7 +10,6 @@ const pool = mariadb.createPool({
   connectionLimit: 5,
 });
 
-// Esegue una query parametrizzata e rilascia sempre la connessione.
 async function query(sql, params) {
   let conn;
   try {

@@ -1,6 +1,3 @@
-// Pagina elenco tornei: ricerca lato server (?q=) + creazione torneo (solo se loggato).
-// Gli sport del form sono derivati dalle liste già disponibili (/fields + /tournaments),
-// così non serve un endpoint dedicato.
 import { apiGet, apiPost } from './api.js';
 import { initLayout, getUser, onAuthChange, escapeHtml } from './layout.js';
 
@@ -17,13 +14,12 @@ function showMessage(html) { messageEl.innerHTML = html; }
 function showError(msg) { showMessage(`<div class="alert error">${escapeHtml(msg)}</div>`); }
 function showOk(msg) { showMessage(`<div class="alert ok">${escapeHtml(msg)}</div>`); }
 
-// 'active' | 'completed' (dal backend) -> etichetta + classe badge
+// 'active' | 'completed'
 const STATO = {
   active: { label: 'In corso', cls: 'badge' },
   completed: { label: 'Completato', cls: 'badge' },
 };
 
-// start_date arriva come DATETIME (ISO): la mostro in formato locale leggibile.
 function formatDate(value) {
   if (!value) return '—';
   const d = new Date(value);
@@ -70,7 +66,6 @@ async function load(q) {
   }
 }
 
-// una sola volta: arricchisce l'elenco sport con quelli dei campi
 async function seedSportsFromFields() {
   try {
     const fields = await apiGet('/fields');
@@ -80,7 +75,6 @@ async function seedSportsFromFields() {
   }
 }
 
-// ---- bottone "Crea torneo" (solo se loggato) ----
 function renderCreateAction() {
   if (!getUser()) {
     createActionEl.innerHTML = '';
@@ -154,13 +148,12 @@ async function onCreate(e) {
   }
 }
 
-// ---- avvio ----
 let timer;
 searchEl.addEventListener('input', () => {
   clearTimeout(timer);
   timer = setTimeout(() => load(searchEl.value.trim()), 250);
 });
-// al login/logout mostro o nascondo il bottone di creazione
+
 onAuthChange(renderCreateAction);
 
 initLayout('tornei');

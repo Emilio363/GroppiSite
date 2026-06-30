@@ -1,6 +1,3 @@
-// Pagina dettaglio campo + prenotazione.
-// Legge ?id= dalla querystring, mostra info campo, disponibilità per data scelta,
-// form di prenotazione (solo se loggato) e cancellazione delle proprie prenotazioni future.
 import { apiGet, apiPost, apiDelete } from './api.js';
 import { initLayout, getUser, onAuthChange, openAuthModal, escapeHtml } from './layout.js';
 
@@ -17,6 +14,7 @@ let slots = null; // ultima risposta di /slots: { apertura, chiusura, prenotazio
 
 const hhmm = (t) => String(t).slice(0, 5);          // "09:00:00" -> "09:00"
 const today = () => new Date().toISOString().slice(0, 10);
+
 // una prenotazione è futura (e quindi cancellabile) se inizia dopo "adesso"
 const isFuture = (date, ora) => new Date(`${date}T${ora}`) > new Date();
 
@@ -52,7 +50,6 @@ function renderForm() {
   formEl.querySelector('#form-book').addEventListener('submit', onBook);
 }
 
-// ---- caricamento campo ----
 async function loadField() {
   try {
     const f = await apiGet(`/fields/${id}`);
@@ -69,7 +66,6 @@ async function loadField() {
   }
 }
 
-// ---- disponibilità per la data selezionata ----
 async function loadSlots() {
   const date = dateEl.value;
   if (!date) return;
@@ -121,7 +117,6 @@ function renderBookings() {
 
 
 
-// ---- azioni ----
 async function onBook(e) {
   e.preventDefault();
   const from = formEl.querySelector('#from').value;

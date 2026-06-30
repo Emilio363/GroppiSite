@@ -1,4 +1,3 @@
-// Pagina elenco campi: ricerca testuale (lato server, ?q=) + filtro sport (lato client).
 import { apiGet } from './api.js';
 import { initLayout, escapeHtml } from './layout.js';
 

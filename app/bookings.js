@@ -3,10 +3,8 @@ import { query } from './db.js';
 import { verifyToken } from './auth.js';
 import { parseInterval, findOverlaps } from './helpers.js';
 
-// Router montato sotto '/api' in server.js: i path qui partono da '/fields' e '/bookings'.
 const router = Router();
 
-// Combina data (YYYY-MM-DD) e ora (HH:MM:SS) in un Date locale.
 function slotStart(data, ora) {
   return new Date(`${data}T${ora}`);
 }
